@@ -1,65 +1,131 @@
 import 'package:flutter/material.dart';
 
-class AddCalculator extends StatelessWidget {
+class AddCalculator extends StatefulWidget {
   const AddCalculator({super.key});
+
+  @override
+  AddCalculatorState createState() => AddCalculatorState();
+}
+
+class AddCalculatorState extends State<AddCalculator> {
+  String _result = '0';
+
+  // Function to handle button press
+  void _onButtonPressed(String value) {
+    setState(() {
+      _result += value;
+    });
+  }
+
+  // Function to handle clearing the input
+  void _clear() {
+    setState(() {
+      _result = '0';
+    });
+  }
+
+  // Function to handle equals button (logic to evaluate the expression goes here)
+  void _calculate() {
+    setState(() {
+      // Add calculation logic here
+      _result = 'Result';
+    });
+  }
+
+  // Function to build calculator buttons
+  Widget buildButton(String text, {Function()? onPressed}) {
+    return ElevatedButton(
+      onPressed: onPressed ?? () => _onButtonPressed(text),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white, backgroundColor: Colors.grey[800], padding: const EdgeInsets.all(24),   // Button text color
+        textStyle: const TextStyle(fontSize: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: Text(text),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Dark background
       appBar: AppBar(
-        title: const Text('Calculator'),
+        title: const Text('Scientific Calculator'),
+        backgroundColor: Colors.black87,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Image widget - calculator logo or icon
-            Image.asset(
-              'assets/images/calculator_icon.png',  // Replace with your image path
-              height: 100,
-            ),
-            const SizedBox(height: 20),
-
-            // Text widget - for instructions or display
-            const Text(
-              'Enter your numbers:',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-
-            // TextFormField widgets - for input fields
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'First Number',
-                border: OutlineInputBorder(),
+            // Display Result
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              alignment: Alignment.centerRight,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[900],
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Second Number',
-                border: OutlineInputBorder(),
+              child: Text(
+                _result,
+                style: const TextStyle(fontSize: 48, color: Colors.blueAccent),
               ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
 
-            // ElevatedButton - for performing calculations
-            ElevatedButton(
-              onPressed: () {
-                // Logic for calculating result goes here
-              },
-              child: const Text('Calculate'),
-            ),
-            const SizedBox(height: 20),
+            // Grid of Calculator Buttons
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 6, // More columns for scientific functions
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                children: [
+                  // First Row: Rad, Deg, x!, %, (, ), AC
+                  buildButton('Rad'),
+                  buildButton('Deg'),
+                  buildButton('x!'),
+                  buildButton('('),
+                  buildButton(')'),
+                  buildButton('%'),
+                  buildButton('AC', onPressed: _clear),
 
-            // Text widget - to display the result
-            const Text(
-              'Result: 0',  // Replace with dynamic result value
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  // Second Row: sin, cos, tan, 7, 8, 9, ÷
+                  buildButton('sin'),
+                  buildButton('cos'),
+                  buildButton('tan'),
+                  buildButton('7'),
+                  buildButton('8'),
+                  buildButton('9'),
+                  buildButton('÷'),
+
+                  // Third Row: log, ln, √, 4, 5, 6, ×
+                  buildButton('log'),
+                  buildButton('ln'),
+                  buildButton('√'),
+                  buildButton('4'),
+                  buildButton('5'),
+                  buildButton('6'),
+                  buildButton('×'),
+
+                  // Fourth Row: π, e, x², 1, 2, 3, -
+                  buildButton('π'),
+                  buildButton('e'),
+                  buildButton('x²'),
+                  buildButton('1'),
+                  buildButton('2'),
+                  buildButton('3'),
+                  buildButton('-'),
+
+                  // Fifth Row: Ans, EXP, 0, ., =, +
+                  buildButton('Ans'),
+                  buildButton('EXP'),
+                  buildButton('0'),
+                  buildButton('.'),
+                  buildButton('=', onPressed: _calculate),
+                  buildButton('+'),
+                ],
+              ),
             ),
           ],
         ),
